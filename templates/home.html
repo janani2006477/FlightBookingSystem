@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>SkyBook - Flight Booking</title>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand">✈ SkyBook</a>
+    <div class="nav-links">
+        <a href="/login">Login</a>
+        <a href="/register" class="btn-primary">Register</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <h1>Book Your Next Flight</h1>
+        <p>Fast, simple flight booking with instant confirmation and auto-generated tickets.</p>
+        <div class="hero-buttons">
+            <a href="/flights" class="btn btn-primary">View Available Flights</a>
+            <a href="/register" class="btn">Create Account</a>
+            <a href="/login" class="btn">Login</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Booking Confirmed - SkyBook</title>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand">✈ SkyBook</a>
+    <div class="nav-links">
+        <a href="/flights">View Flights</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="max-width: 500px; margin: auto;">
+        <div class="success-box">
+            <h2>Booking Confirmed!</h2>
+            <div class="ticket-grid">
+                <div class="ticket-item">
+                    <label>Seat Number</label>
+                    <p>{{ seat_number }}</p>
+                </div>
+                <div class="ticket-item">
+                    <label>Class</label>
+                    <p>{{ ticket_class }}</p>
+                </div>
+                <div class="ticket-item">
+                    <label>Price</label>
+                    <p>₹{{ price }}</p>
+                </div>
+                <div class="ticket-item">
+                    <label>Payment</label>
+                    <p>{{ payment_method }} — {{ payment_status }}</p>
+                </div>
+            </div>
+        </div>
+        <a href="/flights" class="btn btn-primary">Back to Flights</a>
+    </div>
+</div>
+
+</body>
+</html>
