@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>My Dashboard - SkyBook</title>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand">✈ SkyBook</a>
+        <div class="nav-links">
+            <a href="/flights">Book Flight</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card welcome-card">
+            <h1>Welcome, {{ session.user_name }}!</h1>
+            <p>Manage your flight bookings and view your travel history.</p>
+        </div>
+
+        <div class="card">
+            <h2>My Bookings</h2>
+            {% if bookings %}
+            <div class="table-wrapper">
+                <table class="bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Flight</th>
+                            <th>Route</th>
+                            <th>Date</th>
+                            <th>Seat</th>
+                            <th>Class</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>#{{ booking.booking_id }}</td>
+                            <td>{{ booking.airline_name }}</td>
+                            <td>{{ booking.source }} → {{ booking.destination }}</td>
+                            <td>{{ booking.departure_time.strftime('%Y-%m-%d') if booking.departure_time else 'N/A' }}</td>
+                            <td>{{ booking.seat_number }}</td>
+                            <td>{{ booking.class }}</td>
+                            <td>₹{{ booking.price }}</td>
+                            <td>
+                                <span class="status-badge status-{{ booking.status.lower() }}">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if booking.status == 'Confirmed' %}
+                                <a href="/cancel_booking/{{ booking.booking_id }}" 
+                                   class="btn-cancel" 
+                                   onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                    Cancel
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="no-bookings">No bookings yet. <a href="/flights">Book your first flight!</a></p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

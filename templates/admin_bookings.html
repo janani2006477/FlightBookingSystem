@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>All Bookings - Admin</title>
+    <style>
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: #1a1a2e; color: white; padding: 20px; position: fixed; height: 100vh; }
+        .main-content { flex: 1; margin-left: 260px; padding: 30px; background: #f5f7fa; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 12px; margin: 5px 0; border-radius: 8px; }
+        .sidebar a:hover, .sidebar a.active { background: #2a2a4e; }
+        .sidebar a i { width: 25px; margin-right: 10px; }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; } }
+        .menu-toggle { display: none; position: fixed; top: 10px; left: 10px; z-index: 1000; }
+        @media (max-width: 768px) { .menu-toggle { display: block; } }
+    </style>
+</head>
+<body>
+    <button class="btn btn-primary menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
+    
+    <div class="admin-container">
+        <div class="sidebar">
+            <h3><i class="fas fa-plane-departure"></i> SkyBook Admin</h3>
+            <hr>
+            <p>Welcome, {{ session.user_name }}</p>
+            <hr>
+            <a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/admin/flights"><i class="fas fa-plane"></i> Manage Flights</a>
+            <a href="/admin/add_flight"><i class="fas fa-plus-circle"></i> Add Flight</a>
+            <a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a>
+            <a href="/admin/bookings" class="active"><i class="fas fa-ticket-alt"></i> All Bookings</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+
+        <div class="main-content">
+            <h1>All Bookings</h1>
+            
+            <div class="card">
+                <div class="table-wrapper">
+                    <table class="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Passenger</th>
+                                <th>Flight</th>
+                                <th>Route</th>
+                                <th>Seat</th>
+                                <th>Class</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td>#{{ booking.booking_id }}</td>
+                                <td>{{ booking.passenger_name }}</td>
+                                <td>{{ booking.airline_name }}</td>
+                                <td>{{ booking.source }} → {{ booking.destination }}</td>
+                                <td>{{ booking.seat_number }}</td>
+                                <td>{{ booking.class }}</td>
+                                <td>₹{{ booking.price }}</td>
+                                <td><span class="status-badge status-{{ booking.status.lower() }}">{{ booking.status }}</span></td>
+                                <td>{{ booking.booking_date.strftime('%Y-%m-%d') if booking.booking_date else 'N/A' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

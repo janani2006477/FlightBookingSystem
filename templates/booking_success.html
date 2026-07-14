@@ -5,41 +5,64 @@
     <title>Booking Confirmed - SkyBook</title>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/" class="brand">✈ SkyBook</a>
+        <div class="nav-links">
+            <a href="/flights">Book Another Flight</a>
+            <a href="/dashboard">My Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
 
-<nav class="navbar">
-    <a href="/" class="brand">✈ SkyBook</a>
-    <div class="nav-links">
-        <a href="/flights">View Flights</a>
-        <a href="/logout">Logout</a>
-    </div>
-</nav>
-
-<div class="container">
-    <div class="card" style="max-width: 500px; margin: auto;">
-        <div class="success-box">
-            <h2>Booking Confirmed!</h2>
-            <div class="ticket-grid">
-                <div class="ticket-item">
-                    <label>Seat Number</label>
-                    <p>{{ seat_number }}</p>
-                </div>
-                <div class="ticket-item">
-                    <label>Class</label>
-                    <p>{{ ticket_class }}</p>
-                </div>
-                <div class="ticket-item">
-                    <label>Price</label>
-                    <p>₹{{ price }}</p>
-                </div>
-                <div class="ticket-item">
-                    <label>Payment</label>
-                    <p>{{ payment_method }} — {{ payment_status }}</p>
+    <div class="container">
+        <div class="card success-card">
+            <div class="success-icon">✓</div>
+            <h1>Booking Confirmed!</h1>
+            <p>Your flight has been booked successfully.</p>
+            
+            <div class="ticket-details">
+                <h2>E-Ticket</h2>
+                <div class="ticket-grid">
+                    <div class="ticket-item">
+                        <label>Airline</label>
+                        <p>{{ booking.airline_name }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Flight</label>
+                        <p>{{ booking.source }} → {{ booking.destination }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Departure</label>
+                        <p>{{ booking.departure_time.strftime('%B %d, %Y at %I:%M %p') if booking.departure_time else 'N/A' }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Arrival</label>
+                        <p>{{ booking.arrival_time.strftime('%B %d, %Y at %I:%M %p') if booking.arrival_time else 'N/A' }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Seat Number</label>
+                        <p class="highlight">{{ booking.seat_number }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Class</label>
+                        <p>{{ booking.class }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Total Amount</label>
+                        <p class="price">₹{{ booking.price }}</p>
+                    </div>
+                    <div class="ticket-item">
+                        <label>Payment Status</label>
+                        <p class="status paid">{{ booking.payment_status }}</p>
+                    </div>
                 </div>
             </div>
+            
+            <div class="action-buttons">
+                <a href="/dashboard" class="btn btn-primary">View My Bookings</a>
+                <a href="/flights" class="btn">Book Another Flight</a>
+            </div>
         </div>
-        <a href="/flights" class="btn btn-primary">Back to Flights</a>
     </div>
-</div>
-
 </body>
 </html>

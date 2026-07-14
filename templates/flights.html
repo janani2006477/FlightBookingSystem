@@ -2,48 +2,100 @@
 <html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Flights - SkyBook</title>
+    <title>Available Flights - SkyBook</title>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/" class="brand">✈ SkyBook</a>
+        <div class="nav-links">
+            {% if session.passenger_id %}
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </nav>
 
-<nav class="navbar">
-    <a href="/" class="brand">✈ SkyBook</a>
-    <div class="nav-links">
-        <a href="/logout">Logout</a>
+    <div class="container">
+        <div class="card">
+            <h2>Search Flights</h2>
+            <form method="GET" action="/flights" class="search-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>From</label>
+                        <select name="source">
+                            <option value="">Any City</option>
+                            {% for src in sources %}
+                            <option value="{{ src }}" {% if search_params.source == src %}selected{% endif %}>{{ src }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>To</label>
+                        <select name="destination">
+                            <option value="">Any City</option>
+                            {% for dest in destinations %}
+                            <option value="{{ dest }}" {% if search_params.destination == dest %}selected{% endif %}>{{ dest }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" name="date" value="{{ search_params.date }}">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary">Search Flights</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="flight-grid">
+            {% for flight in flights %}
+            <div class="flight-card">
+                <div class="flight-header">
+                    <h3>{{ flight.airline_name }}</h3>
+                    <span class="flight-id">Flight #{{ flight.flight_id }}</span>
+                </div>
+                <div class="flight-body">
+                    <div class="flight-route">
+                        <div class="route-point">
+                            <div class="city-code">{{ flight.source[:3] | upper }}</div>
+                            <div class="city-name">{{ flight.source }}</div>
+                            <div class="time">{{ flight.departure_time.strftime('%I:%M %p') if flight.departure_time else 'N/A' }}</div>
+                        </div>
+                        <div class="route-arrow">→</div>
+                        <div class="route-point">
+                            <div class="city-code">{{ flight.destination[:3] | upper }}</div>
+                            <div class="city-name">{{ flight.destination }}</div>
+                            <div class="time">{{ flight.arrival_time.strftime('%I:%M %p') if flight.arrival_time else 'N/A' }}</div>
+                        </div>
+                    </div>
+                    <div class="flight-details">
+                        <div class="detail-item">
+                            <span class="label">Date:</span>
+                            <span class="value">{{ flight.departure_time.strftime('%b %d, %Y') if flight.departure_time else 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Seats:</span>
+                            <span class="value">{{ flight.total_seats }}</span>
+                        </div>
+                    </div>
+                    <div class="flight-price">
+                        <span class="price">From ₹3000</span>
+                        <a href="/flight/{{ flight.flight_id }}" class="btn btn-primary">Select</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <p>No flights found. Please try different search criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-</nav>
-
-<div class="container">
-    <p class="section-title">Available Flights</p>
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Airline</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for flight in flights %}
-                <tr>
-                    <td>{{ flight[0] }}</td>
-                    <td>{{ flight[1] }}</td>
-                    <td>{{ flight[2] }}</td>
-                    <td>{{ flight[3] }}</td>
-                    <td>{{ flight[4] }}</td>
-                    <td>{{ flight[5] }}</td>
-                    <td><a href="/book/{{ flight[0] }}">Book</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
 </body>
 </html>
